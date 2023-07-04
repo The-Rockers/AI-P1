@@ -7,13 +7,12 @@ namespace P1
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, World!");
-            maze myMaze = new maze();
+            Maze myMaze = new Maze();
             //Goal state: current tile coordinates = (11,3)
-            Hashtable exploredSet = new Hashtable();
-            PriorityQueue<maze, int> frontierSet = new PriorityQueue<maze, int>();
+
 
             (byte,byte)[] pathSpaces = 
-            {  (1,0), (1,1), (1,2), (1,3), (1,4), (1,5), (1,7), (1,8), (1,9),
+            {   (1,0), (1,1), (1,2), (1,3), (1,4), (1,5), (1,7), (1,8), (1,9),
                 (2,1), (2,5), (2,6), (2,7), (2,9),
                 (3,1), (3,3), (3,7), (3,9),
                 (4,1), (4,2), (4,3), (4,5), (4,6), (4,7), (4,9), //1 2 3 5 6 7 9
@@ -24,14 +23,14 @@ namespace P1
                 (9,1), (9,5), (9,9),//1 5 9
                 (10,1), (10,2), (10,3), (10,5), (10,6), (10,7), (10,9), //1 2 3 5 6 7 9
                 (11,3)  
-            };
+            };  //didn't like writing this but what ever
 
-            myMaze.makePath(pathSpaces);
+            myMaze.makePath(pathSpaces);    //first entry in list set to maze's start
+            myMaze.printMaze();
 
+            Console.WriteLine(pathSpaces.Length);
+            Console.WriteLine("aeiou");
 
-            Console.WriteLine("ae");
-
-            //awful!
             
 
         }
