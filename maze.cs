@@ -22,33 +22,59 @@ namespace P1
          *  ## ## ## ## ## ## ## ## ## ## ## ##
          */
 
-        Dictionary<Tuple<byte, byte>, Tile> tileSet = new Dictionary<Tuple<byte, byte>, Tile>();
+        Dictionary<(byte, byte), Tile> tileSet = new Dictionary<(byte, byte), Tile>(); //dict of all tiles. maps coords to tile objects
+        (byte,byte)[] path = new (byte,byte)[132];//list of path spaces.
 
         public maze() 
         {
             for(byte i = 0; i < 12; i++)
             {
                 for(byte j = 0; j < 11; j++)
-                {
-                    tileSet.Add(new Tuple<byte, byte>(j,i), new Tile());
+                { 
+                    tileSet.Add((j,i), new Tile(j,i));
                 }
             }
         }
 
-        public void makePath(List<Tuple<byte, byte>> pathSpaces) //this is way easier than c++ LOL
+        public void makePath((byte,byte)[] pathSpaces)
         {
-            foreach(Tuple<byte, byte> t in pathSpaces)
+            this.path = pathSpaces;
+            foreach((byte, byte) t in pathSpaces)
             {
                 if(tileSet.ContainsKey(t))
                 {
-                    tileSet[t].setFace("[]");
+                    tileSet[t].SetFace("[]");
                 }
+            }
+        }
+        public void setStart((byte, byte) startTile)
+        {
+            if (tileSet.ContainsKey(startTile))
+            {
+                tileSet[startTile].SetFace("00");
             }
         }
 
         public void printMaze()
         {
-
+            for (byte i = 0; i < 12; i++)
+            {
+                for (byte j = 0; j < 11; j++)
+                {
+                    try 
+                    { 
+                        tileSet.TryGetValue((j, i), out Tile ex);
+                        Console.WriteLine(ex.face);
+                    }
+                    catch(NullReferenceException)
+                    {
+                        Console.WriteLine(String.Format("Tile not found. Targeted Coordinate: {0},{1}", j, i));
+                        continue;
+                    }
+                    
+                    
+                }
+            }
         }
 
 
