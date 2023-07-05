@@ -14,9 +14,48 @@ namespace P1
         PriorityQueue<Maze, int> frontierSet = new PriorityQueue<Maze, int>();
         Tile currentTile, nextTile;
 
+        List<Tile>testSet = new List<Tile>();
+
+        byte f, g, h;
+
         public void agentMain()
         {
             exploredSet.Add(currentTile, 0);
+        }
+
+        public void brute(Maze maze, Tile tgtTile)
+        {
+            while(currentTile.GetCoords() != maze.end)
+            {
+                nextTile = maze.GetTile(((byte, byte))(currentTile.x - 1, currentTile.y));
+                if (maze.isLegalMove(currentTile, nextTile))
+                {
+                    testSet.Add(nextTile);
+                }
+                nextTile = maze.GetTile(((byte,byte))(currentTile.x, currentTile.y + 1));
+                if(maze.isLegalMove(currentTile, nextTile))
+                {
+                    testSet.Add(nextTile);
+                }
+                nextTile = maze.GetTile(((byte, byte))(currentTile.x + 1, currentTile.y));
+                if (maze.isLegalMove(currentTile, nextTile))
+                {
+                    testSet.Add(nextTile);
+                }
+                nextTile = maze.GetTile(((byte, byte))(currentTile.x, currentTile.y - 1));
+                if (maze.isLegalMove(currentTile, nextTile))
+                {
+                    testSet.Add(nextTile);
+                }
+                foreach(Tile t in testSet)
+                {
+                    if (exploredSet.ContainsKey(t))
+                    {
+                        testSet.Remove(t);
+                    }
+                }
+
+            }
         }
 
         public Agent(Maze x) 

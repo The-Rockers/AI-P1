@@ -7,7 +7,8 @@ namespace P1
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, World!");
-            Maze myMaze = new Maze();
+            Maze myMaze = new Maze(11,12);
+            
             //Goal state: current tile coordinates = (11,3)
 
 
@@ -25,8 +26,10 @@ namespace P1
                 (11,3)  
             };  //didn't like writing this but what ever
 
-            myMaze.makePath(pathSpaces);    //first entry in list set to maze's start
+            myMaze.makePath(pathSpaces);    //first entry in list set to maze's start. last entry set to exit.
             myMaze.printMaze();
+            Agent agent1 = new Agent(myMaze);
+            agent1.brute(myMaze,myMaze.GetPathStart());
 
             Console.WriteLine(pathSpaces.Length);
             Console.WriteLine("aeiou");
@@ -49,6 +52,7 @@ namespace P1
  *  ## [] ## ## ## ## [] ## [] ## ## ## 8
  *  ## [] [] [] [] [] [] ## [] [] [] ## 9
  *  ## ## ## ## ## ## ## ## ## ## ## ## 10
+    seeking shortest path from 1,0 to 11,3
  */
     }
 }

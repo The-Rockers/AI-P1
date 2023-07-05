@@ -10,7 +10,6 @@ namespace P1
     internal class Tile
     {
         public string face;
-        public bool isPath;
         public byte x { get; private set; }
         public byte y { get; private set; }
 
@@ -22,7 +21,6 @@ namespace P1
         }
 
         public void SetFace(string face) { this.face = face; }
-        public void SetPath(bool x) { this.isPath = x; }
         public (byte,byte) GetCoords() { return (x,y); }
     }
 }

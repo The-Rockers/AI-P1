@@ -27,12 +27,15 @@ namespace P1
 
         Dictionary<(byte, byte), Tile> tileSet = new Dictionary<(byte, byte), Tile>(); //dict of all tiles. maps coords to tile objects
         (byte,byte)[] path = new (byte,byte)[56];//list of path spaces.
-
-        public Maze() 
+        public (byte, byte) start, end;
+        private int maxY, maxX;     //equals NUMBER of items per axis; 1 more than max "index"
+        public Maze(int mY, int mX) 
         {
-            for(byte i = 0; i < 11; i++)
+            maxY = mY;
+            maxX = mX;
+            for(byte i = 0; i < maxY; i++)      //11
             {
-                for(byte j = 0; j < 12; j++)
+                for(byte j = 0; j < maxX; j++)  //12
                 { 
                     tileSet.Add((j,i), new Tile(j,i));
                 }
@@ -46,11 +49,15 @@ namespace P1
             {
                 if(tileSet.ContainsKey(t))
                 {
-                    tileSet[t].SetPath(true);
+                    
                     tileSet[t].SetFace("[]");
                 }
+                
             }
-            tileSet[path[0]].SetFace("00");
+            //tileSet[path[0]].SetFace("00");
+            start = path[0];    //set start coords
+            end = path[^1];     //set end coord
+            
         }
 
         public Tile GetPathStart()
@@ -58,14 +65,19 @@ namespace P1
             return tileSet[path[0]];
         }
 
+        public Tile GetTile((byte,byte) tileCoords)
+        {
+            return tileSet[tileCoords];
+        }
+
         public bool isLegalMove(Tile a, Tile b)
         {
             //a is current, b is target
             //Check: if obstacle, if OOB, *then* if valid.
             //Consider moving this to agent - create dict of discovered illegal moves to avoid repeat?
-            if(b.face == "##" || !b.isPath) { return false; }
-            if(b.x > 11 || b.x < 0) { return false; }
-            if(b.y > 10 || b.y < 0) { return false; }
+            if(b.face == "##") { return false; }
+            if(b.x >= maxX || b.x < 0) { return false; }
+            if(b.y >= maxY || b.y < 0) { return false; }
             if(b.x == (a.x + 1) || b.x == (a.x - 1))
             {
                 if(b.y == a.y)
@@ -87,9 +99,9 @@ namespace P1
 
         public void printMaze()
         {
-            for (byte i = 0; i < 11; i++)
+            for (byte i = 0; i < maxY; i++)
             {
-                for (byte j = 0; j < 12; j++)
+                for (byte j = 0; j < maxX; j++)
                 {
                     try 
                     { 
