@@ -67,7 +67,14 @@ namespace P1
 
         public Tile GetTile((byte,byte) tileCoords)
         {
-            return tileSet[tileCoords];
+            try
+            {
+                return tileSet[tileCoords];
+            }
+            catch(KeyNotFoundException)
+            {
+                return tileSet[(0, 0)];
+            }
         }
 
         public bool isLegalMove(Tile a, Tile b)

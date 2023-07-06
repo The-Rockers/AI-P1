@@ -17,44 +17,96 @@ namespace P1
         List<Tile>testSet = new List<Tile>();
 
         byte f, g, h;
+        //f = total. g = cost so far. h = "remaining" cost.
 
         public void agentMain()
         {
             exploredSet.Add(currentTile, 0);
+            //test
+            //Brute(currentTile);
         }
 
-        public void brute(Maze maze, Tile tgtTile)
+        public bool Brute(Tile tgtTile)  //BFS - testSet, FIFO
         {
-            while(currentTile.GetCoords() != maze.end)
+            byte validNeighbors = 0;
+            currentTile= tgtTile;
+            Console.WriteLine(Convert.ToString(tgtTile.GetCoords()));
+            currentTile.SetFace("00");
+
+            if (currentTile.GetCoords() != rootNode.end)
             {
-                nextTile = maze.GetTile(((byte, byte))(currentTile.x - 1, currentTile.y));
-                if (maze.isLegalMove(currentTile, nextTile))
+                if (!exploredSet.ContainsKey(currentTile))
                 {
-                    testSet.Add(nextTile);
+                    exploredSet.Add(currentTile, 0);
+                    testSet.Remove(currentTile);
                 }
-                nextTile = maze.GetTile(((byte,byte))(currentTile.x, currentTile.y + 1));
-                if(maze.isLegalMove(currentTile, nextTile))
+
+                //WNES order
+                nextTile = rootNode.GetTile(((byte, byte))(currentTile.x - 1, currentTile.y));
+                if (rootNode.isLegalMove(currentTile, nextTile))
                 {
-                    testSet.Add(nextTile);
+                    if (!exploredSet.ContainsKey(nextTile))
+                    {
+                        testSet.Add(nextTile);
+                        validNeighbors++;
+                    }
                 }
-                nextTile = maze.GetTile(((byte, byte))(currentTile.x + 1, currentTile.y));
-                if (maze.isLegalMove(currentTile, nextTile))
+
+                nextTile = rootNode.GetTile(((byte, byte))(currentTile.x, currentTile.y - 1));
+                if (rootNode.isLegalMove(currentTile, nextTile))
                 {
-                    testSet.Add(nextTile);
+                    if (!exploredSet.ContainsKey(nextTile))
+                    {
+                        testSet.Add(nextTile);
+                        validNeighbors++;
+                    }
                 }
-                nextTile = maze.GetTile(((byte, byte))(currentTile.x, currentTile.y - 1));
-                if (maze.isLegalMove(currentTile, nextTile))
+
+                nextTile = rootNode.GetTile(((byte, byte))(currentTile.x + 1, currentTile.y));
+                if (rootNode.isLegalMove(currentTile, nextTile))
                 {
-                    testSet.Add(nextTile);
+                    if (!exploredSet.ContainsKey(nextTile))
+                    {
+                        testSet.Add(nextTile);
+                        validNeighbors++;
+                    }
                 }
+
+                nextTile = rootNode.GetTile(((byte,byte))(currentTile.x, currentTile.y + 1));
+                if(rootNode.isLegalMove(currentTile, nextTile))
+                {
+                    if (!exploredSet.ContainsKey(nextTile))
+                    {
+                        testSet.Add(nextTile);
+                        validNeighbors++;
+                    }
+                }
+
+                /*
                 foreach(Tile t in testSet)
                 {
                     if (exploredSet.ContainsKey(t))
                     {
-                        testSet.Remove(t);
+                        testSet.Remove(t);  didnt know this was illegal LOL
                     }
-                }
+                }*/
 
+                if (validNeighbors == 0)
+                {
+                    Console.WriteLine("DEAD END");
+                    return false;
+                }
+                else
+                {
+                    Brute(testSet[0]);
+                }
+                return false;
+                //if no immedaite paths, go back out the recursive chain
+            }
+            else
+            {
+                Console.WriteLine(String.Format("Arrived at {0}", Convert.ToString(tgtTile.GetCoords())));
+                return true;
             }
         }
 
