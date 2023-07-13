@@ -16,7 +16,8 @@ namespace P1
 
         List<Tile>testSet = new List<Tile>();
 
-        byte f, g, h, exp;
+        byte f, g, h;
+        byte exp = 00;
         //f = total. g = cost so far. h = "remaining" cost.
 
         public void agentMain()
@@ -31,7 +32,11 @@ namespace P1
             byte validNeighbors = 0;
             currentTile= tgtTile;
             Console.WriteLine(Convert.ToString(tgtTile.GetCoords()));
-            currentTile.SetFace("00");
+            exp++;
+            string expStr;
+            if (exp < 10) { expStr = "0" + Convert.ToString(exp); }
+            else { expStr = Convert.ToString(exp); }
+            tgtTile.SetFace(expStr);
 
             if (currentTile.GetCoords() != rootNode.end)
             {
@@ -113,9 +118,13 @@ namespace P1
         public void ASTAR(Tile tgtTile)  //A-STAR - heuristic function f = g + h
         {
             byte validNeighbors = 0;
-            
+            exp++;
+            string expStr;
+            if(exp < 10) { expStr = "0" + Convert.ToString(exp); }
+            else { expStr =  Convert.ToString(exp); }
+
             Console.WriteLine(Convert.ToString(tgtTile.GetCoords()));
-            tgtTile.SetFace("00");
+            tgtTile.SetFace(expStr);
 
             if (tgtTile.GetCoords() != rootNode.end)
             {
