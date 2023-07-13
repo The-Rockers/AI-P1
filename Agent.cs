@@ -11,12 +11,12 @@ namespace P1
     {
         Maze rootNode;
         Hashtable exploredSet = new Hashtable();
-        PriorityQueue<Maze, int> frontierSet = new PriorityQueue<Maze, int>();
+        PriorityQueue<Tile, int> frontierSet = new PriorityQueue<Tile, int>();
         Tile currentTile, nextTile;
 
         List<Tile>testSet = new List<Tile>();
 
-        byte f, g, h;
+        byte f, g, h, exp;
         //f = total. g = cost so far. h = "remaining" cost.
 
         public void agentMain()
@@ -42,7 +42,7 @@ namespace P1
                 }
 
                 //WNES order
-                nextTile = rootNode.GetTile(((byte, byte))(currentTile.x - 1, currentTile.y));
+                nextTile = rootNode.GetTile(((byte, byte))(currentTile.x - 1, currentTile.y));  //WEST
                 if (rootNode.isLegalMove(currentTile, nextTile))
                 {
                     if (!exploredSet.ContainsKey(nextTile))
@@ -52,7 +52,7 @@ namespace P1
                     }
                 }
 
-                nextTile = rootNode.GetTile(((byte, byte))(currentTile.x, currentTile.y - 1));
+                nextTile = rootNode.GetTile(((byte, byte))(currentTile.x, currentTile.y - 1));  //NORTH
                 if (rootNode.isLegalMove(currentTile, nextTile))
                 {
                     if (!exploredSet.ContainsKey(nextTile))
@@ -62,7 +62,7 @@ namespace P1
                     }
                 }
 
-                nextTile = rootNode.GetTile(((byte, byte))(currentTile.x + 1, currentTile.y));
+                nextTile = rootNode.GetTile(((byte, byte))(currentTile.x + 1, currentTile.y));  //EAST
                 if (rootNode.isLegalMove(currentTile, nextTile))
                 {
                     if (!exploredSet.ContainsKey(nextTile))
@@ -72,7 +72,7 @@ namespace P1
                     }
                 }
 
-                nextTile = rootNode.GetTile(((byte,byte))(currentTile.x, currentTile.y + 1));
+                nextTile = rootNode.GetTile(((byte,byte))(currentTile.x, currentTile.y + 1));   //SOUTH
                 if(rootNode.isLegalMove(currentTile, nextTile))
                 {
                     if (!exploredSet.ContainsKey(nextTile))
@@ -107,6 +107,85 @@ namespace P1
             {
                 Console.WriteLine(String.Format("Arrived at {0}", Convert.ToString(tgtTile.GetCoords())));
                 return true;
+            }
+        }
+
+        public void ASTAR(Tile tgtTile)  //A-STAR - heuristic function f = g + h
+        {
+            byte validNeighbors = 0;
+            
+            Console.WriteLine(Convert.ToString(tgtTile.GetCoords()));
+            tgtTile.SetFace("00");
+
+            if (tgtTile.GetCoords() != rootNode.end)
+            {
+                if (!exploredSet.ContainsKey(tgtTile))
+                {
+                    exploredSet.Add(tgtTile, 0);
+                }
+
+                //WNES order
+                nextTile = rootNode.GetTile(((byte, byte))(tgtTile.x - 1, tgtTile.y));  //WEST
+                if (rootNode.isLegalMove(tgtTile, nextTile))
+                {
+                    if (!exploredSet.ContainsKey(nextTile))
+                    {
+                        
+                        f = (byte)(g + 2);
+                        frontierSet.Enqueue(nextTile, f);
+                        validNeighbors++;
+                    }
+                }
+
+                nextTile = rootNode.GetTile(((byte, byte))(tgtTile.x, tgtTile.y - 1));  //NORTH
+                if (rootNode.isLegalMove(tgtTile, nextTile))
+                {
+                    if (!exploredSet.ContainsKey(nextTile))
+                    {
+                        f = (byte)(g + 1);
+                        frontierSet.Enqueue(nextTile, f);
+                        validNeighbors++;
+                    }
+                }
+
+                nextTile = rootNode.GetTile(((byte, byte))(tgtTile.x + 1, tgtTile.y));  //EAST
+                if (rootNode.isLegalMove(tgtTile, nextTile))
+                {
+                    if (!exploredSet.ContainsKey(nextTile))
+                    {
+                        f = (byte)(g + 2);
+                        frontierSet.Enqueue(nextTile, f);
+                        validNeighbors++;
+                    }
+                }
+
+                nextTile = rootNode.GetTile(((byte, byte))(tgtTile.x, tgtTile.y + 1));   //SOUTH
+                if (rootNode.isLegalMove(tgtTile, nextTile))
+                {
+                    if (!exploredSet.ContainsKey(nextTile))
+                    {
+                        f = (byte)(g + 3);
+                        frontierSet.Enqueue(nextTile, f);
+                        validNeighbors++;
+                    }
+                }
+
+
+                if (validNeighbors == 0)
+                {
+                    Console.WriteLine("DEAD END");
+                }
+                else
+                {
+                    ASTAR(frontierSet.Dequeue());
+                }
+                
+                //if no immedaite paths, go back out the recursive chain
+            }
+            else
+            {
+                Console.WriteLine(String.Format("Arrived at {0}", Convert.ToString(tgtTile.GetCoords())));
+                return;
             }
         }
 
