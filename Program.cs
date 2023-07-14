@@ -29,8 +29,8 @@ namespace P1
             myMaze.makePath(pathSpaces);    //first entry in list set to maze's start. last entry set to exit.
             myMaze.printMaze();
             Agent agent1 = new Agent(myMaze);
-            agent1.Brute(myMaze.GetPathStart());
-            //agent1.ASTAR(myMaze.GetPathStart());
+            //agent1.Brute(myMaze.GetPathStart());
+            agent1.ASTAR(myMaze.GetPathStart());
 
             Console.WriteLine(pathSpaces.Length);
             Console.WriteLine("aeiou");

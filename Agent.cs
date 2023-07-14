@@ -185,9 +185,10 @@ namespace P1
                     Console.WriteLine("DEAD END");
                 }
                 else
-                {
-                    ASTAR(frontierSet.Dequeue());
-                }
+                { }
+                
+                ASTAR(frontierSet.Dequeue());
+                
                 
                 //if no immedaite paths, go back out the recursive chain
             }
