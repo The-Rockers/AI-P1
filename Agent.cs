@@ -12,7 +12,7 @@ namespace P1
         Maze referenceMaze;
         Hashtable exploredSet = new Hashtable();
         PriorityQueue<Tile, int> frontierSet = new PriorityQueue<Tile, int>();
-        Tile currentTile, nextTile;
+        Tile BFSOnlyTile, nextTile;
 
         List<Tile>testSet = new List<Tile>();
 
@@ -30,7 +30,7 @@ namespace P1
         public bool Brute(Tile tgtTile)  //BFS - testSet, FIFO
         {
             byte validNeighbors = 0;
-            currentTile= tgtTile;
+            BFSOnlyTile= tgtTile;
             Console.WriteLine(Convert.ToString(tgtTile.GetCoords()));
             exp++;
             string expStr;
@@ -38,17 +38,17 @@ namespace P1
             else { expStr = Convert.ToString(exp); }
             tgtTile.SetFace(expStr);
 
-            if (currentTile.GetCoords() != referenceMaze.end)
+            if (BFSOnlyTile.GetCoords() != referenceMaze.end)
             {
-                if (!exploredSet.ContainsKey(currentTile))
+                if (!exploredSet.ContainsKey(BFSOnlyTile))
                 {
-                    exploredSet.Add(currentTile, 0);
-                    testSet.Remove(currentTile);
+                    exploredSet.Add(BFSOnlyTile, 0);
+                    testSet.Remove(BFSOnlyTile);
                 }
 
                 //WNES order
-                nextTile = referenceMaze.GetTile(((byte, byte))(currentTile.x - 1, currentTile.y));  //WEST
-                if (referenceMaze.isLegalMove(currentTile, nextTile))
+                nextTile = referenceMaze.GetTile(((byte, byte))(BFSOnlyTile.x - 1, BFSOnlyTile.y));  //WEST
+                if (referenceMaze.isLegalMove(BFSOnlyTile, nextTile))
                 {
                     if (!exploredSet.ContainsKey(nextTile))
                     {
@@ -57,8 +57,8 @@ namespace P1
                     }
                 }
 
-                nextTile = referenceMaze.GetTile(((byte, byte))(currentTile.x, currentTile.y - 1));  //NORTH
-                if (referenceMaze.isLegalMove(currentTile, nextTile))
+                nextTile = referenceMaze.GetTile(((byte, byte))(BFSOnlyTile.x, BFSOnlyTile.y - 1));  //NORTH
+                if (referenceMaze.isLegalMove(BFSOnlyTile, nextTile))
                 {
                     if (!exploredSet.ContainsKey(nextTile))
                     {
@@ -67,8 +67,8 @@ namespace P1
                     }
                 }
 
-                nextTile = referenceMaze.GetTile(((byte, byte))(currentTile.x + 1, currentTile.y));  //EAST
-                if (referenceMaze.isLegalMove(currentTile, nextTile))
+                nextTile = referenceMaze.GetTile(((byte, byte))(BFSOnlyTile.x + 1, BFSOnlyTile.y));  //EAST
+                if (referenceMaze.isLegalMove(BFSOnlyTile, nextTile))
                 {
                     if (!exploredSet.ContainsKey(nextTile))
                     {
@@ -77,8 +77,8 @@ namespace P1
                     }
                 }
 
-                nextTile = referenceMaze.GetTile(((byte,byte))(currentTile.x, currentTile.y + 1));   //SOUTH
-                if(referenceMaze.isLegalMove(currentTile, nextTile))
+                nextTile = referenceMaze.GetTile(((byte,byte))(BFSOnlyTile.x, BFSOnlyTile.y + 1));   //SOUTH
+                if(referenceMaze.isLegalMove(BFSOnlyTile, nextTile))
                 {
                     if (!exploredSet.ContainsKey(nextTile))
                     {
@@ -118,12 +118,13 @@ namespace P1
         public void ASTAR(Tile tgtTile)  //A-STAR - heuristic function f = g + h
         {
             byte validNeighbors = 0;
-            exp++;
+            
             string expStr;
-            if(exp < 10) { expStr = "0" + Convert.ToString(exp); }
-            else { expStr =  Convert.ToString(exp); }
+            if(tgtTile.order < 10) { expStr = "0" + Convert.ToString(tgtTile.order); }
+            else { expStr =  Convert.ToString(tgtTile.order); }
 
-            Console.WriteLine(Convert.ToString(tgtTile.GetCoords()));
+            string testOutPutString = expStr + Convert.ToString(tgtTile.GetCoords()) + Convert.ToString(tgtTile.g) + "-" + Convert.ToString(tgtTile.h);
+            Console.WriteLine(testOutPutString);
             tgtTile.SetFace(expStr);
 
             if (tgtTile.GetCoords() != referenceMaze.end)
@@ -139,7 +140,9 @@ namespace P1
                 {
                     if (!exploredSet.ContainsKey(nextTile))
                     {
-                        nextTile.g = (byte)(currentTile.g + 2);
+                        exp++;
+                        nextTile.order = exp;
+                        nextTile.g = (byte)(tgtTile.g + 2);
                         nextTile.h = referenceMaze.GetH(nextTile);
                         f = (byte)(nextTile.g + nextTile.h);
                         frontierSet.Enqueue(nextTile, f);
@@ -152,7 +155,9 @@ namespace P1
                 {
                     if (!exploredSet.ContainsKey(nextTile))
                     {
-                        nextTile.g = (byte)(currentTile.g + 1);
+                        exp++;
+                        nextTile.order = exp;
+                        nextTile.g = (byte)(tgtTile.g + 1);
                         nextTile.h = referenceMaze.GetH(nextTile);
                         f = (byte)(nextTile.g + nextTile.h);
                         frontierSet.Enqueue(nextTile, f);
@@ -165,7 +170,9 @@ namespace P1
                 {
                     if (!exploredSet.ContainsKey(nextTile))
                     {
-                        nextTile.g = (byte)(currentTile.g + 2);
+                        exp++;
+                        nextTile.order = exp;
+                        nextTile.g = (byte)(tgtTile.g + 2);
                         nextTile.h = referenceMaze.GetH(nextTile);
                         f = (byte)(nextTile.g + nextTile.h);
                         frontierSet.Enqueue(nextTile, f);
@@ -178,21 +185,28 @@ namespace P1
                 {
                     if (!exploredSet.ContainsKey(nextTile))
                     {
-                        nextTile.g = (byte)(currentTile.g + 3);
+                        exp++;
+                        nextTile.order = exp;
+                        nextTile.g = (byte)(tgtTile.g + 3);
                         nextTile.h = referenceMaze.GetH(nextTile);
                         f = (byte)(nextTile.g + nextTile.h);
                         frontierSet.Enqueue(nextTile, f);
+
                         validNeighbors++;
                     }
                 }
 
-
+                if(tgtTile.order == 41)
+                {
+                    Console.WriteLine("!HI!");
+                }
                 if (validNeighbors == 0)
                 {
                     Console.WriteLine("DEAD END");
                 }
                 else
                 { }
+                
                 
                 ASTAR(frontierSet.Dequeue());
                 
@@ -214,7 +228,7 @@ namespace P1
         public Agent(Maze x) 
         {
             this.referenceMaze = x;
-            currentTile = referenceMaze.GetPathStart(); 
+            BFSOnlyTile = referenceMaze.GetPathStart(); 
         }
 
     }

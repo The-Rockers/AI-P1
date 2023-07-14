@@ -87,7 +87,7 @@ namespace P1
 
             int mult = 1;
 
-            if(y1 > y2) { mult = 3; } //probably not great practice to hardcode in the wind values but whatever. this isn't going in the met.
+            if(y1 < y2) { mult = 3; } //probably not great practice to hardcode in the wind values but whatever. this isn't going in the met.
 
             y1 = Math.Abs(y2 - y1);
             y1 *= mult;

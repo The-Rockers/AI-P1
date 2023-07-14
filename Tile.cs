@@ -14,7 +14,7 @@ namespace P1
         public byte y { get; private set; }
         public byte g { get; set; }
         public byte h { get; set; }
-
+        public byte order { get; set; }
 
 
         public Tile(byte x, byte y)
@@ -24,6 +24,7 @@ namespace P1
             this.y = y;
             this.h = 0;
             this.g = 0;
+            this.order = 0;
         }
 
         public void SetFace(string face) { this.face = face; }
