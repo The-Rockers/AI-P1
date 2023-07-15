@@ -10,15 +10,15 @@ namespace P1
     internal class Agent
     {
         Maze referenceMaze;
-        Hashtable exploredSet = new Hashtable();
-        PriorityQueue<Tile, int> frontierSet = new PriorityQueue<Tile, int>();
-        Tile BFSOnlyTile; //BFSOnly is only used in my (sort of?) BFS implementation. I just don't have the heart to get rid of it.
-        Tile? nextTile; 
+        Hashtable exploredSet = new Hashtable(); //A hash table for the explored set 
+        PriorityQueue<Tile, int> frontierSet = new PriorityQueue<Tile, int>();  //Priority queue for frontier set
+        Tile? nextTile;
 
-        List<Tile>BFSSet = new List<Tile>();
-
-        byte f, g, h;
+        byte f;
         byte exp = 00;
+
+        Tile BFSOnlyTile; //BFSOnly is only used in my (sort of?) BFS implementation. I just don't have the heart to get rid of it.
+        List<Tile>BFSSet = new List<Tile>();
         
         // f = total. g = cost so far. h = "remaining" cost.
         // to get h for a given tile, need to calculate distance from it to end.
@@ -211,15 +211,12 @@ namespace P1
                     tieSet.Add((x, priority));
                 }
                 
-
-                //byte lowest = byte.MaxValue;
-                for(int i = 0; i < tieSet.Count; i++)    //eh. clean code was fun while it lasted. but those ties arent gonna break themselves.
+                for(int i = 0; i < tieSet.Count; i++)
                 {
                     for(int j = i+1; j < tieSet.Count; j++)
                     {
                         if (tieSet[i].Item2 == tieSet[j].Item2)
                         {
-                            //Console.Write(String.Format("TIE CONDITION- TILE #{0} WITH PRIORITY {1}{2}TIED WITH TILE #{3} WITH PRIORITY {4}{2}", tieSet[i].Item1.order, tieSet[i].Item2, Environment.NewLine, tieSet[j].Item1.order, tieSet[j].Item2));
                             if (tieSet[j].Item1.order < tieSet[i].Item1.order)
                             {
                                 (Tile, int) myItem = tieSet[i];

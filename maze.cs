@@ -59,10 +59,7 @@ namespace P1
             
         }
 
-        public Tile GetPathStart()
-        {
-            return tileSet[path[0]];
-        }
+        public Tile GetPathStart() { return tileSet[path[0]]; }
 
         public Tile GetTile((byte,byte) tileCoords)
         {
@@ -95,19 +92,19 @@ namespace P1
             x1 = (x2 - x1) * 2;
 
             h = (byte)(x1 + y1);
-            // f = total. g = cost so far. h = "remaining" cost.
+            /* f = total. g = cost so far. h = "remaining" cost.
             // IF y(Tile1) < y(tile2) THEN multiply |yDiff| by 3 ELSE multiply |yDiff| by 1
             // Multiply |xDiff| by 2. add outcomes together. this is h.
-            // g is cost from prev tile.
+            // g is cost from prev tile.*/
 
             return h;
         }
 
         public bool isLegalMove(Tile a, Tile b)
         {
-            //a is current, b is target
+            /*a is current, b is target
             //Check: if obstacle, if OOB, *then* if valid.
-            //Consider moving this to agent - create dict of discovered illegal moves to avoid repeat?
+            //Consider moving this to agent - create dict of discovered illegal moves to avoid repeat? */
             if(b.face == "##") { return false; }
             if(b.x >= maxX || b.x < 0) { return false; }
             if(b.y >= maxY || b.y < 0) { return false; }
@@ -124,9 +121,7 @@ namespace P1
                 {
                     return true;
                 }
-
             }
-
             return false;
         }
 
