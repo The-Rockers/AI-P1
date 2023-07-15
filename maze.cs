@@ -151,9 +151,5 @@ namespace P1
                 Console.Write(Environment.NewLine);
             }
         }
-
-
-
-
     }
 }

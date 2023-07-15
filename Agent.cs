@@ -120,10 +120,9 @@ namespace P1
             string expStr;
             if(tgtTile.order < 10) { expStr = "0" + Convert.ToString(tgtTile.order); }
             else { expStr =  Convert.ToString(tgtTile.order); }
-            string testOutPutString = expStr + Convert.ToString(tgtTile.GetCoords()) + Convert.ToString(tgtTile.g) + "-" + Convert.ToString(tgtTile.h);
-            Console.WriteLine(testOutPutString);
+            //string testOutPutString = expStr + Convert.ToString(tgtTile.GetCoords()) + Convert.ToString(tgtTile.g) + "-" + Convert.ToString(tgtTile.h);
+            //Console.WriteLine(testOutPutString);
             tgtTile.SetFace(expStr);
-
 
 
             if (tgtTile.GetCoords() != referenceMaze.end)
@@ -146,7 +145,10 @@ namespace P1
                         f = (byte)(nextTile.g + nextTile.h);
                         frontierSet.Enqueue(nextTile, f);
                         validNeighbors++;
+                        //nextTile.SetFace("--");     //DEBUG ONLY
+                        //referenceMaze.printMaze();      //DEBUG ONLY
                     }
+                    
                 }
 
                 nextTile = referenceMaze.GetTile(((byte, byte))(tgtTile.x, tgtTile.y - 1));  //NORTH
@@ -161,7 +163,10 @@ namespace P1
                         f = (byte)(nextTile.g + nextTile.h);
                         frontierSet.Enqueue(nextTile, f);
                         validNeighbors++;
+                        //nextTile.SetFace("--");     //DEBUG ONLY
+                        //referenceMaze.printMaze();      //DEBUG ONLY
                     }
+                   
                 }
 
                 nextTile = referenceMaze.GetTile(((byte, byte))(tgtTile.x + 1, tgtTile.y));  //EAST
@@ -176,7 +181,10 @@ namespace P1
                         f = (byte)(nextTile.g + nextTile.h);
                         frontierSet.Enqueue(nextTile, f);
                         validNeighbors++;
+                        //nextTile.SetFace("--");     //DEBUG ONLY
+                        //referenceMaze.printMaze();      //DEBUG ONLY
                     }
+                    
                 }
 
                 nextTile = referenceMaze.GetTile(((byte, byte))(tgtTile.x, tgtTile.y + 1));   //SOUTH
@@ -191,6 +199,8 @@ namespace P1
                         f = (byte)(nextTile.g + nextTile.h);
                         frontierSet.Enqueue(nextTile, f);
                         validNeighbors++;
+                        //nextTile.SetFace("--");     //DEBUG ONLY
+                        //referenceMaze.printMaze();      //DEBUG ONLY
                     }
                 }
 
@@ -203,18 +213,18 @@ namespace P1
                 
 
                 //byte lowest = byte.MaxValue;
-                for(int i = 0; i < tieSet.Count -1; i++)    //eh. clean code was fun while it lasted. but those ties arent gonna break themselves.
+                for(int i = 0; i < tieSet.Count; i++)    //eh. clean code was fun while it lasted. but those ties arent gonna break themselves.
                 {
                     for(int j = i+1; j < tieSet.Count; j++)
                     {
                         if (tieSet[i].Item2 == tieSet[j].Item2)
                         {
-                            Console.Write(String.Format("TIE CONDITION- TILE #{0} WITH PRIORITY {1}{2}TIED WITH TILE #{3} WITH PRIORITY {4}{2}", tieSet[i].Item1.order, tieSet[i].Item2, Environment.NewLine, tieSet[j].Item1.order, tieSet[j].Item2));
+                            //Console.Write(String.Format("TIE CONDITION- TILE #{0} WITH PRIORITY {1}{2}TIED WITH TILE #{3} WITH PRIORITY {4}{2}", tieSet[i].Item1.order, tieSet[i].Item2, Environment.NewLine, tieSet[j].Item1.order, tieSet[j].Item2));
                             if (tieSet[j].Item1.order < tieSet[i].Item1.order)
                             {
                                 (Tile, int) myItem = tieSet[i];
-                                tieSet[i] = tieSet[j];
-                                tieSet[j] = myItem;     //swap them! If they have equal values 
+                                tieSet[i] = tieSet[j];      //swap them! If they have equal priority values, put the lower order one first.
+                                tieSet[j] = myItem;         //order = order they were added to frontier set. so equal priority items are tiebroken by FIFO!
                             }
                         }
                     }
@@ -223,29 +233,15 @@ namespace P1
                 {
                     frontierSet.Enqueue(node.Item1, node.Item2);
                 }
-                if (validNeighbors == 0)
-                {
-                    Console.WriteLine("DEAD END");
-                }
-                else
-                { }
-
-                //NEED TIEBREAKER
-                referenceMaze.printMaze();
-                ASTAR(frontierSet.Dequeue());
                 
+                ASTAR(frontierSet.Dequeue());
                 
             }
             else
             {
-                Console.WriteLine(String.Format("Arrived at {0}", Convert.ToString(tgtTile.GetCoords())));
+                Console.WriteLine(String.Format("Arrived at {0} in {1} moves", Convert.ToString(tgtTile.GetCoords()), Convert.ToString(tgtTile.order)));
                 return;
             }
-        }
-
-        public byte getHeuristic()
-        {
-            return 1;
         }
 
         public Agent(Maze x) 

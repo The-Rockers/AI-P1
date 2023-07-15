@@ -6,11 +6,7 @@ namespace P1
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
             Maze myMaze = new Maze(11,12);
-            
-            //Goal state: current tile coordinates = (11,3)
-
 
             (byte,byte)[] pathSpaces = 
             {   (1,0), (1,1), (1,2), (1,3), (1,4), (1,5), (1,7), (1,8), (1,9),
@@ -26,18 +22,13 @@ namespace P1
                 (11,3)  
             };  //didn't like writing this but what ever
 
-            myMaze.makePath(pathSpaces);    //first entry in list set to maze's start. last entry set to exit.
+            myMaze.makePath(pathSpaces);    //first entry in list will be registered as the maze's start. last entry is its exit.
             myMaze.printMaze();
             Agent agent1 = new Agent(myMaze);
             //agent1.Brute(myMaze.GetPathStart());
             agent1.ASTAR(myMaze.GetPathStart());
 
-            Console.WriteLine(pathSpaces.Length);
-            Console.WriteLine("aeiou");
             myMaze.printMaze();
-
-            
-
         }
 
 
