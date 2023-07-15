@@ -87,7 +87,7 @@ namespace P1
 
             int mult = 1;
 
-            if(y1 < y2) { mult = 3; } //probably not great practice to hardcode in the wind values but whatever. this isn't going in the met.
+            if(y1 < y2) { mult = 3; } //probably not great practice to hardcode in the wind values but whatever. this is code for a grade and not an award.
 
             y1 = Math.Abs(y2 - y1);
             y1 *= mult;
@@ -96,10 +96,6 @@ namespace P1
 
             h = (byte)(x1 + y1);
             // f = total. g = cost so far. h = "remaining" cost.
-            // to get h for a given tile, need to calculate distance from it to end.
-            // fortunately things can be either up or down not both. there fore we can do easy math.
-            // diff [(y1,y2) * (if positive, 1, if negative, 3)] + diff (x1,x2) -- REMBER Y UPSIDE DOWN. 
-            //
             // IF y(Tile1) < y(tile2) THEN multiply |yDiff| by 3 ELSE multiply |yDiff| by 1
             // Multiply |xDiff| by 2. add outcomes together. this is h.
             // g is cost from prev tile.

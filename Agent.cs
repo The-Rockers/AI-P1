@@ -12,9 +12,10 @@ namespace P1
         Maze referenceMaze;
         Hashtable exploredSet = new Hashtable();
         PriorityQueue<Tile, int> frontierSet = new PriorityQueue<Tile, int>();
-        Tile BFSOnlyTile, nextTile;
+        Tile BFSOnlyTile; //BFSOnly is only used in my (sort of?) BFS implementation. I just don't have the heart to get rid of it.
+        Tile? nextTile; 
 
-        List<Tile>testSet = new List<Tile>();
+        List<Tile>BFSSet = new List<Tile>();
 
         byte f, g, h;
         byte exp = 00;
@@ -27,7 +28,7 @@ namespace P1
         // Multiply |xDiff| by 2. add outcomes together. this is h.
         // g is cost from prev tile.
 
-        public bool Brute(Tile tgtTile)  //BFS - testSet, FIFO
+        public bool PseudoBFS(Tile tgtTile)  //BFS - BFSSet, FIFO
         {
             byte validNeighbors = 0;
             BFSOnlyTile= tgtTile;
@@ -43,7 +44,7 @@ namespace P1
                 if (!exploredSet.ContainsKey(BFSOnlyTile))
                 {
                     exploredSet.Add(BFSOnlyTile, 0);
-                    testSet.Remove(BFSOnlyTile);
+                    BFSSet.Remove(BFSOnlyTile);
                 }
 
                 //WNES order
@@ -52,7 +53,7 @@ namespace P1
                 {
                     if (!exploredSet.ContainsKey(nextTile))
                     {
-                        testSet.Add(nextTile);
+                        BFSSet.Add(nextTile);
                         validNeighbors++;
                     }
                 }
@@ -62,7 +63,7 @@ namespace P1
                 {
                     if (!exploredSet.ContainsKey(nextTile))
                     {
-                        testSet.Add(nextTile);
+                        BFSSet.Add(nextTile);
                         validNeighbors++;
                     }
                 }
@@ -72,7 +73,7 @@ namespace P1
                 {
                     if (!exploredSet.ContainsKey(nextTile))
                     {
-                        testSet.Add(nextTile);
+                        BFSSet.Add(nextTile);
                         validNeighbors++;
                     }
                 }
@@ -82,7 +83,7 @@ namespace P1
                 {
                     if (!exploredSet.ContainsKey(nextTile))
                     {
-                        testSet.Add(nextTile);
+                        BFSSet.Add(nextTile);
                         validNeighbors++;
                     }
                 }
@@ -99,12 +100,9 @@ namespace P1
                 if (validNeighbors == 0)
                 {
                     Console.WriteLine("DEAD END");
-                    return false;
                 }
-                else
-                {
-                    Brute(testSet[0]);
-                }
+                PseudoBFS(BFSSet[0]);
+                
                 return false;
                 //if no immedaite paths, go back out the recursive chain
             }
@@ -118,14 +116,15 @@ namespace P1
         public void ASTAR(Tile tgtTile)  //A-STAR - heuristic function f = g + h
         {
             byte validNeighbors = 0;
-            
+
             string expStr;
             if(tgtTile.order < 10) { expStr = "0" + Convert.ToString(tgtTile.order); }
             else { expStr =  Convert.ToString(tgtTile.order); }
-
             string testOutPutString = expStr + Convert.ToString(tgtTile.GetCoords()) + Convert.ToString(tgtTile.g) + "-" + Convert.ToString(tgtTile.h);
             Console.WriteLine(testOutPutString);
             tgtTile.SetFace(expStr);
+
+
 
             if (tgtTile.GetCoords() != referenceMaze.end)
             {
@@ -191,14 +190,38 @@ namespace P1
                         nextTile.h = referenceMaze.GetH(nextTile);
                         f = (byte)(nextTile.g + nextTile.h);
                         frontierSet.Enqueue(nextTile, f);
-
                         validNeighbors++;
                     }
                 }
 
-                if(tgtTile.order == 41)
+                List<(Tile, int)> tieSet = new List<(Tile, int)>();
+                for(int i = 0; i <= frontierSet.Count; i++)
                 {
-                    Console.WriteLine("!HI!");
+                    frontierSet.TryDequeue(out Tile x, out int priority);
+                    tieSet.Add((x, priority));
+                }
+                
+
+                //byte lowest = byte.MaxValue;
+                for(int i = 0; i < tieSet.Count -1; i++)    //eh. clean code was fun while it lasted. but those ties arent gonna break themselves.
+                {
+                    for(int j = i+1; j < tieSet.Count; j++)
+                    {
+                        if (tieSet[i].Item2 == tieSet[j].Item2)
+                        {
+                            Console.Write(String.Format("TIE CONDITION- TILE #{0} WITH PRIORITY {1}{2}TIED WITH TILE #{3} WITH PRIORITY {4}{2}", tieSet[i].Item1.order, tieSet[i].Item2, Environment.NewLine, tieSet[j].Item1.order, tieSet[j].Item2));
+                            if (tieSet[j].Item1.order < tieSet[i].Item1.order)
+                            {
+                                (Tile, int) myItem = tieSet[i];
+                                tieSet[i] = tieSet[j];
+                                tieSet[j] = myItem;     //swap them! If they have equal values 
+                            }
+                        }
+                    }
+                }
+                foreach (var node in tieSet)
+                {
+                    frontierSet.Enqueue(node.Item1, node.Item2);
                 }
                 if (validNeighbors == 0)
                 {
@@ -206,12 +229,12 @@ namespace P1
                 }
                 else
                 { }
-                
-                
+
+                //NEED TIEBREAKER
+                referenceMaze.printMaze();
                 ASTAR(frontierSet.Dequeue());
                 
                 
-                //if no immedaite paths, go back out the recursive chain
             }
             else
             {
@@ -228,7 +251,7 @@ namespace P1
         public Agent(Maze x) 
         {
             this.referenceMaze = x;
-            BFSOnlyTile = referenceMaze.GetPathStart(); 
+            BFSOnlyTile = referenceMaze.GetPathStart();
         }
 
     }
